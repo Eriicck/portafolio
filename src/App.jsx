@@ -7,9 +7,9 @@ import {
   Briefcase, User, SlidersHorizontal
 } from 'lucide-react'
 
-const EJS_SERVICE  = 'TU_SERVICE_ID'
-const EJS_TEMPLATE = 'TU_TEMPLATE_ID'
-const EJS_KEY      = 'TU_PUBLIC_KEY'
+const EJS_SERVICE  = import.meta.env.VITE_EJS_SERVICE
+const EJS_TEMPLATE = import.meta.env.VITE_EJS_TEMPLATE
+const EJS_KEY      = import.meta.env.VITE_EJS_KEY
 
 const FOTO = 'https://firebasestorage.googleapis.com/v0/b/misuperappmayorista.firebasestorage.app/o/Foto%20perfil%20Febrero%202026%20IA%20copia%20sin%20marca%20de%20agua.png?alt=media&token=531dac6f-fd71-49de-bdd2-434e57e600dd'
 
@@ -384,7 +384,7 @@ style={{
         ))}
         <button onClick={toggleTheme} className="flex flex-col items-center gap-1" style={{color: isDark ? '#facc15' : mut}}>
           {isDark ? <Sun size={20} strokeWidth={1.5}/> : <Moon size={20} strokeWidth={1.5}/>}
-          <span className="text-[10px] font-medium">{isDark ? 'Light' : 'Dark'}</span>
+          <span className="text-[10px] font-medium">{isDark ? 'Claro' : 'Oscuro'}</span>
         </button>
       </nav>
 
@@ -475,9 +475,10 @@ function Home({ isDark }) {
             </h1>
           </div>
           <div className={`transition-all duration-700 delay-300 transform ${heroActive ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-            <p className="text-base sm:text-lg font-light max-w-lg mx-auto leading-relaxed text-zinc-300">
-              Desarrollo a medida para negocios que quieren crecer — e-commerce, sistemas de gestión, automatización con IA y presencia digital.
-            </p>
+<p className="shine-text text-base sm:text-lg max-w-lg mx-auto leading-relaxed"
+  style={{fontFamily:'Lato, sans-serif', fontSize:'1.1rem', fontStyle:'italic'}}>
+  Fullstack &amp; analista de sistemas — e-commerce, gestión y automatización IA para negocios que quieren crecer y mejorar sus resultados.
+</p>
           </div>
         </div>
         <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce text-zinc-600">
@@ -513,7 +514,7 @@ function Home({ isDark }) {
             <div className="grid md:grid-cols-2 gap-16 lg:gap-24 items-center">
               <div className="order-2 md:order-1">
                 <div className="flex flex-wrap gap-2 mb-6">
-                  {['Fullstack Developer','Analista de Sistemas','E-commerce','Marketing Digital'].map(t => (
+                  {['Fullstack Developer','Analista de Sistemas','E-commerce','Marketing Digital','Freelancer'].map(t => (
                     <span key={t} className={`text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border ${isDark ? 'border-zinc-700 text-zinc-400 bg-zinc-900' : 'border-zinc-200 text-zinc-500 bg-zinc-50'}`}>{t}</span>
                   ))}
                 </div>
@@ -616,11 +617,11 @@ function Home({ isDark }) {
       </section>
 
 {/* ══ CONTACTO ══ */}
-      <section id="contacto" className="relative min-h-screen pb-32 md:pb-0 overflow-hidden">
+      <section id="contacto" className="relative pb-32 md:pb-0 overflow-hidden">
         <div className={`absolute inset-0 parallax-contact ${isDark ? 'opacity-20' : 'opacity-10'}`}/>
         <div className={`absolute inset-0 ${isDark ? 'bg-zinc-950/90' : 'bg-white/92'}`}/>
 
-        <div className="relative z-10 min-h-screen flex flex-col">
+        <div className="relative z-10 flex flex-col">
 
           {/* CONTACTO — grande centrado */}
           <Reveal className="pt-24 pb-10 text-center px-6">
@@ -704,17 +705,13 @@ function Home({ isDark }) {
       </section>
 
       {/* ══ FOOTER ══ */}
-      <footer className={`border-t py-16 mb-16 md:mb-0 ${isDark ? 'border-zinc-900 bg-zinc-950 text-zinc-600' : 'border-zinc-200 bg-white text-zinc-400'}`}>
+      <footer className={`border-t py-6 mb-16 md:mb-0 ${isDark ? 'border-zinc-900 bg-zinc-950 text-zinc-600' : 'border-zinc-200 bg-white text-zinc-400'}`}>
         <div className="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="flex items-center gap-3">
             <span style={{fontFamily:'Syne,sans-serif'}} className="font-bold tracking-tighter text-lg">Erick C.</span>
             <span className="text-xs uppercase tracking-[0.3em] font-medium">&mdash; 2026</span>
           </div>
-          <div className="flex flex-wrap justify-center gap-10 text-[10px] font-bold uppercase tracking-[0.2em]">
-            <a href="mailto:contrerasc479@gmail.com" className="hover:text-green-500 transition-colors">Email directo</a>
-            <a href="https://wa.me/541136013353" target="_blank" rel="noreferrer" className="hover:text-green-500 transition-colors">WhatsApp</a>
-            <a href="https://www.linkedin.com/in/erick-contreras-8b920a199" target="_blank" rel="noreferrer" className="hover:text-green-500 transition-colors">LinkedIn</a>
-          </div>
+          
         </div>
       </footer>
 

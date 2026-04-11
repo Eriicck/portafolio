@@ -68,3 +68,26 @@ body {
 @media (max-width: 768px) {
   .parallax-contact { background-attachment: scroll; }
 }
+
+/* Shine Sweep */
+@keyframes shineSweep {
+  0%   { background-position: -200% center; }
+  30%  { background-position: 200% center; }
+  100% { background-position: 200% center; }
+}
+
+.shine-text {
+  background: linear-gradient(
+    105deg,
+    rgba(255,255,255,0.55) 0%,
+    rgba(255,255,255,0.55) 40%,
+    rgba(255,255,255,1) 50%,
+    rgba(255,255,255,0.55) 60%,
+    rgba(255,255,255,0.55) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shineSweep 6s linear infinite;
+}
