@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@astrojs/react": "^7.0.1",
+    "@astrojs/sitemap": "^3.7.4",
     "@emailjs/browser": "^4.4.1",
     "@lucide/astro": "^1.55.0",
     "@tailwindcss/vite": "^4.3.3",

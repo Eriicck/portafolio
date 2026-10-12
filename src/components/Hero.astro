@@ -2,7 +2,11 @@
 import { ChevronDown } from '@lucide/astro'
 ---
 <header id="hero" class="relative w-full h-screen flex items-center justify-center overflow-hidden bg-black">
+  <!-- El patrón se calcula en baja resolución y el navegador lo agranda;
+       la trama de puntos y la viñeta son CSS (no cuestan nada por cuadro). -->
   <canvas id="silk" class="absolute inset-0 w-full h-full" aria-hidden="true"></canvas>
+  <div class="silk-dots absolute inset-0" aria-hidden="true"></div>
+  <div class="absolute inset-0 bg-[radial-gradient(circle_farthest-side,rgba(0,0,0,0.1),rgba(0,0,0,0.4))]" aria-hidden="true"></div>
   <div class="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/60"></div>
   <div class="relative z-10 container mx-auto px-4 text-center max-w-4xl">
     <h1 class="hero-in [animation-delay:150ms] font-display text-5xl sm:text-6xl md:text-8xl font-bold leading-none mb-6 tracking-tight text-white">
@@ -17,24 +21,46 @@ import { ChevronDown } from '@lucide/astro'
   </a>
 </header>
 
+<style>
+  /* Trama de 2px: solo se ve 1 de cada 4 píxeles, como el efecto original */
+  .silk-dots {
+    background-image:
+      linear-gradient(to right, transparent 1px, #000 1px),
+      linear-gradient(to bottom, transparent 1px, #000 1px);
+    background-size: 2px 2px;
+  }
+</style>
+
 <script>
-  // Fondo "seda" animado. ~30 fps, se pausa fuera de pantalla o con la pestaña oculta,
-  // y con "reducir movimiento" muestra un solo cuadro.
+  // Fondo "seda" animado.
+  // - Se calcula una muestra cada STEP píxeles (16 veces menos trabajo que píxel a píxel).
+  // - Lo que no cambia con el tiempo (ruido) se calcula una sola vez por tamaño de pantalla.
+  // - ~30 fps; se pausa fuera de pantalla o con la pestaña oculta.
+  // - Con "reducir movimiento" muestra un solo cuadro.
   const canvas = document.getElementById('silk') as HTMLCanvasElement | null
-  const ctx = canvas?.getContext('2d')
+  const ctx = canvas?.getContext('2d', { alpha: false })
   if (canvas && ctx) {
-    const speed = 0.02, scale = 2, noiseI = 0.8, FRAME_MS = 33
+    const STEP = 4, speed = 0.02, scale = 2, noiseI = 0.8, FRAME_MS = 33
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     let time = 0, last = -Infinity, visible = true, raf = 0
     let img: ImageData | null = null
+    let grain = new Float32Array(0)
+    let colWave = new Float32Array(0)
+
+    const noise = (x: number, y: number) => { const G = 2.71828; return (G * Math.sin(G * x) * G * Math.sin(G * y) * (1 + x)) % 1 }
 
     const resize = () => {
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
+      const cw = Math.ceil(window.innerWidth / STEP)
+      const ch = Math.ceil(window.innerHeight / STEP)
+      canvas.width = cw
+      canvas.height = ch
       // createImageData falla con tamaño 0 (pestaña oculta, previews, bots)
-      img = canvas.width > 0 && canvas.height > 0 ? ctx.createImageData(canvas.width, canvas.height) : null
+      if (cw === 0 || ch === 0) { img = null; return }
+      img = ctx.createImageData(cw, ch)
+      grain = new Float32Array(cw * ch)
+      for (let y = 0; y < ch; y++) for (let x = 0; x < cw; x++) grain[y * cw + x] = noise(x * STEP, y * STEP) / 15 * noiseI
+      colWave = new Float32Array(cw)
     }
-    const noise = (x: number, y: number) => { const G = 2.71828; return (G * Math.sin(G * x) * G * Math.sin(G * y) * (1 + x)) % 1 }
 
     const draw = (now = 0) => {
       if (!visible || document.hidden) return
@@ -43,18 +69,19 @@ import { ChevronDown } from '@lucide/astro'
       last = now
       const { width: w, height: h } = canvas
       const d = img.data
-      for (let x = 0; x < w; x += 2) for (let y = 0; y < h; y += 2) {
-        const u = (x / w) * scale, v = (y / h) * scale, tO = speed * time
-        const tx = u, ty = v + 0.03 * Math.sin(8 * tx - tO)
-        const pat = 0.6 + 0.4 * Math.sin(5 * (tx + ty + Math.cos(3 * tx + 5 * ty) + 0.02 * tO) + Math.sin(20 * (tx + ty - 0.1 * tO)))
-        const intensity = Math.max(0, pat - noise(x, y) / 15 * noiseI)
-        const i = (y * w + x) * 4
-        d[i] = 123 * intensity; d[i + 1] = 116 * intensity; d[i + 2] = 129 * intensity; d[i + 3] = 255
+      const tO = speed * time
+      for (let x = 0; x < w; x++) colWave[x] = 0.03 * Math.sin(8 * (x / w) * scale - tO)
+      let i = 0
+      for (let y = 0; y < h; y++) {
+        const v = (y / h) * scale
+        for (let x = 0; x < w; x++, i += 4) {
+          const tx = (x / w) * scale, ty = v + colWave[x]
+          const pat = 0.6 + 0.4 * Math.sin(5 * (tx + ty + Math.cos(3 * tx + 5 * ty) + 0.02 * tO) + Math.sin(20 * (tx + ty - 0.1 * tO)))
+          const k = Math.max(0, pat - grain[y * w + x])
+          d[i] = 123 * k; d[i + 1] = 116 * k; d[i + 2] = 129 * k; d[i + 3] = 255
+        }
       }
       ctx.putImageData(img, 0, 0)
-      const ov = ctx.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, Math.max(w, h) / 2)
-      ov.addColorStop(0, 'rgba(0,0,0,0.1)'); ov.addColorStop(1, 'rgba(0,0,0,0.4)')
-      ctx.fillStyle = ov; ctx.fillRect(0, 0, w, h)
       time++
     }
     const restart = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(draw) }

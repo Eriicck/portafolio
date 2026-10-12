@@ -102,7 +102,7 @@ export const PROJECTS = [
   },
   {
     id: 10, title: 'Automatización con n8n', cat: 'automation', status: 'Eficiencia',
-    url: '', img: 'https://substackcdn.com/image/fetch/$s_!GuPI!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fd02ec635-f963-4cb9-89b6-4bc080bd9ab1_3698x2778.webp',
+    url: '', img: '/proyectos/n8n.webp',
     desc: 'Flujos que conectan tu negocio y eliminan tareas manuales.',
     details: 'Diseño e implementación de flujos automatizados: Lead → CRM → WhatsApp → Email → seguimiento automático.',
     stack: 'n8n + Webhooks. Reducción de tareas manuales operativas en +70%.',
@@ -110,7 +110,7 @@ export const PROJECTS = [
   },
   {
     id: 11, title: 'Agentes IA Autónomos', cat: 'automation', status: 'Innovación',
-    url: '', img: 'https://n8niostorageaccount.blob.core.windows.net/n8nio-strapi-blobs-prod/assets/wf_itops_can_9321eac0eb.svg',
+    url: '', img: '/proyectos/agentes-ia.webp',
     desc: 'Asistente inteligente de ventas y soporte 24/7.',
     details: 'Agentes IA entrenados con datos del negocio para atención al cliente, soporte técnico y ventas automáticas sin intervención humana.',
     stack: 'GPT-4o + n8n + RAG. Entrenado con datos propios del cliente.',

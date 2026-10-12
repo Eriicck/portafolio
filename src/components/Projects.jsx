@@ -34,7 +34,7 @@ function FlipCard({ p, onOpen }) {
         <div className="flip-front flex flex-col border bg-white border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800">
           {p.img ? (
             <div className="relative h-[55%] overflow-hidden">
-              <img src={p.img} alt="" className="w-full h-full object-cover object-top" loading="lazy" />
+              <img src={p.img} alt="" width={800} height={470} className="w-full h-full object-cover object-top" loading="lazy" decoding="async" />
               <div className="absolute inset-x-0 bottom-0 h-3/4 bg-gradient-to-t from-white via-white/60 to-transparent dark:from-zinc-900 dark:via-zinc-900/60" />
               <span className="absolute top-3 left-3 text-[11px] font-mono uppercase tracking-widest px-2 py-1 rounded border backdrop-blur-sm bg-white/70 border-zinc-200 text-zinc-600 dark:bg-zinc-950/70 dark:border-zinc-700 dark:text-zinc-300">{p.status}</span>
             </div>
@@ -107,7 +107,7 @@ function Modal({ p, onClose }) {
         </div>
         {p.img && (
           <div className="w-full h-[220px] overflow-hidden">
-            <img src={p.img} alt={`Captura de ${p.title}`} className="w-full h-full object-cover object-top" />
+            <img src={p.img} alt={`Captura de ${p.title}`} width={800} height={470} className="w-full h-full object-cover object-top" decoding="async" />
           </div>
         )}
         <div className="px-6 py-5 grid grid-cols-1 sm:grid-cols-2 gap-6">

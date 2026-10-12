@@ -11,7 +11,7 @@ import { TECH } from '../data/site.js'
       <ul class="ticker-wrap flex items-center gap-12 whitespace-nowrap w-max">
         {[...TECH, ...TECH].map((t, i) => (
           <li class="ticker-item flex flex-col items-center gap-2 shrink-0 cursor-default" aria-hidden={i >= TECH.length ? 'true' : undefined}>
-            <img src={t.logo} alt={i < TECH.length ? t.name : ''} height="36" loading="lazy" class:list={['h-9 w-auto object-contain', t.invert && 'logo-invert']} />
+            <img src={t.logo} alt={i < TECH.length ? t.name : ''} width={t.width} height="36" loading="lazy" decoding="async" class:list={['h-9 w-auto object-contain', t.invert && 'logo-invert']} />
             <span class="text-[11px] font-mono tracking-widest text-zinc-500 dark:text-zinc-400">{t.name}</span>
           </li>
         ))}

@@ -6,21 +6,22 @@ export const SITE = {
   title: 'Erick Contreras — Fullstack Developer & Analista de Sistemas',
   description: 'Desarrollador fullstack y analista de sistemas especializado en e-commerce, SaaS y automatización con IA. Disponible para freelance y full time.',
   ogDescription: 'Desarrollo a medida — e-commerce, sistemas de gestión y automatización IA para negocios que quieren crecer.',
-  photo: 'https://firebasestorage.googleapis.com/v0/b/misuperappmayorista.firebasestorage.app/o/Foto%20perfil%20Febrero%202026%20IA%20copia%20sin%20marca%20de%20agua.png?alt=media&token=531dac6f-fd71-49de-bdd2-434e57e600dd',
+  ogImage: '/og.jpg', // 1200x630, se genera a partir de src/assets/perfil.jpg
 }
 
+// Logos de la cinta de tecnologías (archivos en public/tech/). `width` = ancho a 36px de alto.
 export const TECH = [
-  { name: 'React',        logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg' },
-  { name: 'JavaScript',   logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg' },
-  { name: 'TypeScript',   logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg' },
-  { name: 'Tailwind CSS', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg' },
-  { name: 'CSS3',         logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg' },
-  { name: 'Vite',         logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vite/vite-original.svg' },
-  { name: 'Astro',        logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/astro/astro-original.svg', invert: true },
-  { name: 'Firebase',     logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-plain.svg' },
-  { name: 'n8n',          logo: 'https://upload.wikimedia.org/wikipedia/commons/5/53/N8n-logo-new.svg' },
-  { name: 'OpenAI',       logo: 'https://cdn.worldvectorlogo.com/logos/openai-2.svg', invert: true },
-  { name: 'Gemini',       logo: 'https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg' },
-  { name: 'Git',          logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg' },
-  { name: 'MercadoLibre', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/MercadoLibre_logo.PNG/250px-MercadoLibre_logo.PNG' },
+  { name: 'React', logo: '/tech/react.svg', width: 36 },
+  { name: 'JavaScript', logo: '/tech/javascript.svg', width: 36 },
+  { name: 'TypeScript', logo: '/tech/typescript.svg', width: 36 },
+  { name: 'Tailwind CSS', logo: '/tech/tailwind-css.svg', width: 36 },
+  { name: 'CSS3', logo: '/tech/css3.svg', width: 36 },
+  { name: 'Vite', logo: '/tech/vite.svg', width: 36 },
+  { name: 'Astro', logo: '/tech/astro.svg', width: 36, invert: true },
+  { name: 'Firebase', logo: '/tech/firebase.svg', width: 36 },
+  { name: 'n8n', logo: '/tech/n8n.svg', width: 90 },
+  { name: 'OpenAI', logo: '/tech/openai.svg', width: 36, invert: true },
+  { name: 'Gemini', logo: '/tech/gemini.svg', width: 98 },
+  { name: 'Git', logo: '/tech/git.svg', width: 36 },
+  { name: 'MercadoLibre', logo: '/tech/mercadolibre.webp', width: 94 },
 ]

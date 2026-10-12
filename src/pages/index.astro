@@ -6,8 +6,40 @@ import Profile from '../components/Profile.astro'
 import TechMarquee from '../components/TechMarquee.astro'
 import Projects from '../components/Projects.jsx'
 import Contact from '../components/Contact.astro'
+import { SITE } from '../data/site.js'
+import { SERVICES } from '../data/services.js'
+
+// Datos estructurados para Google (quién sos y qué hacés)
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Person',
+      '@id': `${SITE.url}/#persona`,
+      name: SITE.name,
+      url: SITE.url,
+      image: new URL(SITE.ogImage, SITE.url).href,
+      jobTitle: 'Fullstack Developer & Analista de Sistemas',
+      address: { '@type': 'PostalAddress', addressLocality: 'Buenos Aires', addressCountry: 'AR' },
+      knowsAbout: ['React', 'Astro', 'Firebase', 'Node.js', 'PostgreSQL', 'n8n', 'E-commerce', 'Sistemas de gestión', 'Automatización con IA'],
+      makesOffer: SERVICES.map((s) => ({
+        '@type': 'Offer',
+        itemOffered: { '@type': 'Service', name: `${s.title} ${s.accentTitle}`, description: s.subtitle },
+      })),
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${SITE.url}/#sitio`,
+      url: SITE.url,
+      name: SITE.name,
+      inLanguage: 'es-AR',
+      publisher: { '@id': `${SITE.url}/#persona` },
+    },
+  ],
+}
 ---
 <Base>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(schema)} />
   <main>
     <Hero />
     <Areas />

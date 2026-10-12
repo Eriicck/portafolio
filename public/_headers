@@ -1,0 +1,13 @@
+# Cabeceras de seguridad y caché para Netlify.
+# Si se agrega una imagen o servicio de otro dominio, sumarlo a la política (CSP) de abajo.
+
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://images.unsplash.com; connect-src 'self' https://api.emailjs.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+
+# Archivos con hash en el nombre: nunca cambian, se pueden guardar un año
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
