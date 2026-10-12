@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom'
+import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom'
 import {
   ChevronDown, ArrowRight, ArrowUpRight, X, Layers,
   Layout, ShoppingCart, LayoutDashboard, Bot,
@@ -62,9 +62,10 @@ const AREAS = [
 ]
 
 const SERVICES_LIST = [
-  { label:'Web & Sistemas',    sub:'Landing pages, SaaS, gestión', to:'/services/web',       dot:'#22c55e' },
-  { label:'MercadoLibre',      sub:'E-commerce y marketplace',      to:'/services/ecommerce', dot:'#f59e0b' },
-  { label:'Redes & Marketing', sub:'Instagram, Ads y contenido',    to:'/services/marketing', dot:'#ec4899' },
+  { label:'Web & Landing',       sub:'Presencia digital de alto impacto', to:'/services/web',        dot:'#22c55e' },
+  { label:'E-commerce',          sub:'Tiendas y MercadoLibre',            to:'/services/ecommerce',  dot:'#f59e0b' },
+  { label:'Sistemas & SaaS',     sub:'CRM, turnos y dashboards',          to:'/services/systems',    dot:'#8b5cf6' },
+  { label:'IA & Automatización', sub:'Agentes y flujos con n8n',          to:'/services/automation', dot:'#ec4899' },
 ]
 
 const PER_PAGE = 6
@@ -76,17 +77,29 @@ function SilkCanvas() {
   useEffect(() => {
     const canvas = ref.current; if (!canvas) return
     const ctx = canvas.getContext('2d'); if (!ctx) return
-    let time = 0
-    const speed = 0.02, scale = 2, noiseI = 0.8
-    const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight }
+    let time = 0, img = null, last = -Infinity, visible = true
+    const speed = 0.02, scale = 2, noiseI = 0.8, FRAME_MS = 33
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const resize = () => {
+      canvas.width = window.innerWidth; canvas.height = window.innerHeight
+      // createImageData lanza error con tamaño 0 (pestaña oculta, previews, bots)
+      img = canvas.width > 0 && canvas.height > 0 ? ctx.createImageData(canvas.width, canvas.height) : null
+    }
     resize(); window.addEventListener('resize', resize)
+    const obs = new IntersectionObserver(([e]) => {
+      visible = e.isIntersecting
+      if (visible && !reduceMotion) { cancelAnimationFrame(anim.current); anim.current = requestAnimationFrame(draw) }
+    })
+    obs.observe(canvas)
     const noise = (x,y) => { const G=2.71828; return (G*Math.sin(G*x)*G*Math.sin(G*y)*(1+x))%1 }
-    const draw = () => {
+    const draw = (now = 0) => {
+      if (!visible || document.hidden) return
+      if (!reduceMotion) anim.current = requestAnimationFrame(draw)
+      if (now - last < FRAME_MS) return
+      last = now
+      if (!img) return
       const {width:w,height:h} = canvas
-      const g = ctx.createLinearGradient(0,0,w,h)
-      g.addColorStop(0,'#1a1a1a'); g.addColorStop(0.5,'#2a2a2a'); g.addColorStop(1,'#1a1a1a')
-      ctx.fillStyle=g; ctx.fillRect(0,0,w,h)
-      const img = ctx.createImageData(w,h); const d=img.data
+      const d = img.data
       for (let x=0;x<w;x+=2) for (let y=0;y<h;y+=2) {
         const u=(x/w)*scale, v=(y/h)*scale, tO=speed*time
         const tx=u, ty=v+0.03*Math.sin(8*tx-tO)
@@ -99,10 +112,15 @@ function SilkCanvas() {
       const ov=ctx.createRadialGradient(w/2,h/2,0,w/2,h/2,Math.max(w,h)/2)
       ov.addColorStop(0,'rgba(0,0,0,0.1)'); ov.addColorStop(1,'rgba(0,0,0,0.4)')
       ctx.fillStyle=ov; ctx.fillRect(0,0,w,h)
-      time++; anim.current=requestAnimationFrame(draw)
+      time++
     }
+    const onVis = () => { if (!document.hidden && visible && !reduceMotion) { cancelAnimationFrame(anim.current); anim.current = requestAnimationFrame(draw) } }
+    document.addEventListener('visibilitychange', onVis)
     draw()
-    return () => { window.removeEventListener('resize',resize); cancelAnimationFrame(anim.current) }
+    return () => {
+      window.removeEventListener('resize',resize); document.removeEventListener('visibilitychange', onVis)
+      obs.disconnect(); cancelAnimationFrame(anim.current)
+    }
   },[])
   return <canvas ref={ref} className="absolute inset-0 w-full h-full"/>
 }
@@ -163,7 +181,7 @@ function FlipCard({ p, isDark, onOpen }) {
             <div className="relative h-[55%] overflow-hidden">
               <img src={p.img} alt={p.title} className="w-full h-full object-cover object-top transition-transform duration-700" loading="lazy"/>
               <div className={`absolute inset-x-0 bottom-0 h-3/4 bg-gradient-to-t ${isDark ? 'from-zinc-900 via-zinc-900/60 to-transparent' : 'from-white via-white/60 to-transparent'}`}/>
-              <span className={`absolute top-3 left-3 text-[9px] font-mono uppercase tracking-widest px-2 py-1 rounded border backdrop-blur-sm ${isDark ? 'bg-zinc-950/70 border-zinc-700 text-zinc-300' : 'bg-white/70 border-zinc-200 text-zinc-600'}`}>{p.status}</span>
+              <span className={`absolute top-3 left-3 text-[11px] font-mono uppercase tracking-widest px-2 py-1 rounded border backdrop-blur-sm ${isDark ? 'bg-zinc-950/70 border-zinc-700 text-zinc-300' : 'bg-white/70 border-zinc-200 text-zinc-600'}`}>{p.status}</span>
             </div>
           ) : (
             <div className={`h-[55%] flex items-center justify-center ${isDark ? 'bg-zinc-800' : 'bg-zinc-100'}`}>
@@ -178,7 +196,7 @@ function FlipCard({ p, isDark, onOpen }) {
               </div>
               <p className={`text-xs leading-relaxed line-clamp-2 ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>{p.desc}</p>
             </div>
-            <div className="flex flex-wrap gap-1.5 text-[9px] font-bold uppercase tracking-tighter text-zinc-500">
+            <div className={`flex flex-wrap gap-1.5 text-[11px] font-bold uppercase tracking-tighter ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>
               {p.tags.slice(0,3).map(t => <span key={t}>#{t}</span>)}
             </div>
           </div>
@@ -197,7 +215,7 @@ function FlipCard({ p, isDark, onOpen }) {
             </div>
             <h4 style={{fontFamily:'Syne,sans-serif'}} className={`text-base font-bold mb-3 ${isDark ? 'text-white' : 'text-black'}`}>Stack técnico</h4>
             <p className={`text-xs leading-relaxed mb-5 max-w-[200px] ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>{p.stack}</p>
-            <div className={`text-[9px] font-bold uppercase tracking-widest py-2 px-5 rounded-full border ${isDark ? 'border-green-500/40 text-green-400' : 'border-green-600/40 text-green-700'}`}>
+            <div className={`text-[11px] font-bold uppercase tracking-widest py-2 px-5 rounded-full border ${isDark ? 'border-green-500/40 text-green-400' : 'border-green-600/40 text-green-700'}`}>
               Ver detalles
             </div>
           </div>
@@ -220,7 +238,7 @@ function Modal({ p, isDark, onClose }) {
         <div className={`flex items-center justify-between px-6 py-4 border-b ${isDark ? 'border-zinc-800' : 'border-zinc-100'}`}>
           <div className="flex items-center gap-3">
             <h3 style={{fontFamily:'Syne,sans-serif'}} className={`text-lg font-bold ${isDark ? 'text-white' : 'text-black'}`}>{p.title}</h3>
-            <span className="px-2 py-0.5 text-[9px] font-bold rounded-full uppercase tracking-widest bg-green-500/10 text-green-500 border border-green-500/20">{p.status}</span>
+            <span className="px-2 py-0.5 text-[11px] font-bold rounded-full uppercase tracking-widest bg-green-500/10 text-green-500 border border-green-500/20">{p.status}</span>
           </div>
           <button onClick={onClose} className={`p-1.5 rounded-lg transition-colors ${isDark ? 'text-zinc-400 hover:text-white hover:bg-zinc-800' : 'text-zinc-400 hover:text-black hover:bg-zinc-100'}`}>
             <X size={20} strokeWidth={1.5}/>
@@ -236,12 +254,12 @@ function Modal({ p, isDark, onClose }) {
             <p className={`text-sm leading-relaxed mb-4 ${isDark ? 'text-zinc-300' : 'text-zinc-700'}`}>{p.details}</p>
             <div className="flex flex-wrap gap-1.5">
               {p.tags.map(t => (
-                <span key={t} className={`px-2 py-0.5 border rounded text-[10px] font-medium ${isDark ? 'bg-zinc-800 border-zinc-700 text-zinc-400' : 'bg-zinc-50 border-zinc-200 text-zinc-600'}`}>{t}</span>
+                <span key={t} className={`px-2 py-0.5 border rounded text-[11px] font-medium ${isDark ? 'bg-zinc-800 border-zinc-700 text-zinc-400' : 'bg-zinc-50 border-zinc-200 text-zinc-600'}`}>{t}</span>
               ))}
             </div>
           </div>
           <div>
-            <p className={`text-[10px] font-bold uppercase tracking-widest mb-2 ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>Stack</p>
+            <p className={`text-[11px] font-bold uppercase tracking-widest mb-2 ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>Stack</p>
             <p className={`text-xs leading-relaxed mb-5 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>{p.stack}</p>
             {p.url ? (
               <a href={p.url} target="_blank" rel="noopener noreferrer">
@@ -303,7 +321,7 @@ function Navbar({ isDark, toggleTheme }) {
   const bg   = isDark ? '#09090b' : '#ffffff'
   const bord = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.08)'
   const txt  = isDark ? '#ffffff' : '#09090b'
-  const mut  = isDark ? '#71717a' : '#a1a1aa'
+  const mut  = isDark ? '#a1a1aa' : '#71717a'
 
   return (
     <>
@@ -333,7 +351,7 @@ style={{
                     <span className="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0" style={{background:s.dot}}/>
                     <div>
                       <p style={{color:txt}} className="text-xs font-bold">{s.label}</p>
-                      <p style={{color:mut}} className="text-[10px]">{s.sub}</p>
+                      <p style={{color:mut}} className="text-[11px]">{s.sub}</p>
                     </div>
                   </button>
                 ))}
@@ -379,12 +397,12 @@ style={{
             onClick={() => { if (hasDropdown) setMobileServicesOpen(o => !o); else scrollTo(id) }}
             className="flex flex-col items-center gap-1" style={{color:mut}}>
             <Icon size={20} strokeWidth={1.5}/>
-            <span className="text-[10px] font-medium">{label}</span>
+            <span className="text-[11px] font-medium">{label}</span>
           </button>
         ))}
         <button onClick={toggleTheme} className="flex flex-col items-center gap-1" style={{color: isDark ? '#facc15' : mut}}>
           {isDark ? <Sun size={20} strokeWidth={1.5}/> : <Moon size={20} strokeWidth={1.5}/>}
-          <span className="text-[10px] font-medium">{isDark ? 'Claro' : 'Oscuro'}</span>
+          <span className="text-[11px] font-medium">{isDark ? 'Claro' : 'Oscuro'}</span>
         </button>
       </nav>
 
@@ -515,7 +533,7 @@ function Home({ isDark }) {
               <div className="order-2 md:order-1">
                 <div className="flex flex-wrap gap-2 mb-6">
                   {['Fullstack Developer','Analista de Sistemas','E-commerce','Marketing Digital','Freelancer'].map(t => (
-                    <span key={t} className={`text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border ${isDark ? 'border-zinc-700 text-zinc-400 bg-zinc-900' : 'border-zinc-200 text-zinc-500 bg-zinc-50'}`}>{t}</span>
+                    <span key={t} className={`text-[11px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border ${isDark ? 'border-zinc-700 text-zinc-400 bg-zinc-900' : 'border-zinc-200 text-zinc-500 bg-zinc-50'}`}>{t}</span>
                   ))}
                 </div>
                 <h2 style={{fontFamily:'Syne,sans-serif'}} className={`text-4xl md:text-6xl font-bold mb-8 leading-tight ${isDark ? 'text-white' : 'text-black'}`}>Erick Contreras</h2>
@@ -535,16 +553,16 @@ function Home({ isDark }) {
                 <div className={`absolute -z-10 top-8 -right-8 w-full h-full border-2 border-dashed rounded-[3rem] opacity-10 ${isDark ? 'border-green-500' : 'border-zinc-400'}`}/>
                 <div className={`absolute -bottom-6 -left-6 z-20 px-5 py-4 rounded-2xl border shadow-2xl backdrop-blur-md ${isDark ? 'bg-zinc-900/90 border-zinc-700' : 'bg-white/90 border-zinc-200'}`}
                   style={{transform:`translateY(${scrollY * -0.06}px)`}}>
-                  <p className={`text-[9px] font-bold uppercase tracking-[0.2em] mb-1 ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>Stack principal</p>
+                  <p className={`text-[11px] font-bold uppercase tracking-[0.2em] mb-1 ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>Stack principal</p>
                   <p style={{fontFamily:'Syne,sans-serif'}} className={`text-sm font-bold ${isDark ? 'text-white' : 'text-black'}`}>React · Firebase · n8n</p>
                   <div className="flex items-center gap-1.5 mt-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"/>
-                    <span className={`text-[9px] font-medium ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>Disponible para proyectos</span>
+                    <span className={`text-[11px] font-medium ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>Disponible para proyectos</span>
                   </div>
                 </div>
                 <div className={`absolute -top-4 -right-4 z-20 px-4 py-3 rounded-xl border shadow-xl backdrop-blur-md ${isDark ? 'bg-zinc-900/90 border-zinc-700' : 'bg-white/90 border-zinc-200'}`}
                   style={{transform:`translateY(${scrollY * 0.04}px)`}}>
-                  <p className={`text-[9px] font-bold uppercase tracking-widest mb-0.5 ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>Proyectos</p>
+                  <p className={`text-[11px] font-bold uppercase tracking-widest mb-0.5 ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>Proyectos</p>
                   <p style={{fontFamily:'Syne,sans-serif'}} className={`text-xl font-bold ${isDark ? 'text-white' : 'text-black'}`}>11+</p>
                 </div>
               </div>
@@ -555,7 +573,7 @@ function Home({ isDark }) {
 
       {/* ══ TECH TICKER ══ */}
       <section className={`py-16 border-t overflow-hidden ${isDark ? 'border-zinc-900 bg-zinc-950' : 'border-zinc-100 bg-white'}`}>
-        <p className={`text-center text-[10px] font-bold uppercase tracking-[0.3em] mb-8 ${isDark ? 'text-zinc-600' : 'text-zinc-400'}`}>Stack tecnológico</p>
+        <p className={`text-center text-[11px] font-bold uppercase tracking-[0.3em] mb-8 ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>Stack tecnológico</p>
         <div className="relative">
           <div className={`absolute left-0 top-0 w-20 h-full z-10 pointer-events-none ${isDark ? 'bg-gradient-to-r from-zinc-950 to-transparent' : 'bg-gradient-to-r from-white to-transparent'}`}/>
           <div className={`absolute right-0 top-0 w-20 h-full z-10 pointer-events-none ${isDark ? 'bg-gradient-to-l from-zinc-950 to-transparent' : 'bg-gradient-to-l from-white to-transparent'}`}/>
@@ -564,7 +582,7 @@ function Home({ isDark }) {
               {[...TECH,...TECH].map((t,i) => (
                 <div key={i} className="ticker-item flex flex-col items-center gap-2 shrink-0 cursor-default">
                   <img src={t.logo} alt={t.name} className="h-9 w-auto object-contain" style={{filter: t.inv ? (isDark ? 'invert(1)' : 'none') : 'none'}}/>
-                  <span className={`text-[9px] font-mono tracking-widest ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>{t.name}</span>
+                  <span className={`text-[11px] font-mono tracking-widest ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>{t.name}</span>
                 </div>
               ))}
             </div>
@@ -671,18 +689,18 @@ function Home({ isDark }) {
                         {label:'Tu email',  val:email, set:setEmail, type:'email', ph:'juan@ejemplo.com'},
                       ].map(f => (
                         <div key={f.label}>
-                          <label className={`block text-[10px] font-bold uppercase tracking-[0.2em] mb-3 ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>{f.label}</label>
+                          <label className={`block text-[11px] font-bold uppercase tracking-[0.2em] mb-3 ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>{f.label}</label>
                           <input required type={f.type} value={f.val} onChange={e=>f.set(e.target.value)} placeholder={f.ph}
                             className={`w-full px-0 py-2 bg-transparent border-b-2 outline-none transition-all duration-300 text-base
-                              ${isDark ? 'border-zinc-800 focus:border-green-500 text-white placeholder:text-zinc-700' : 'border-zinc-300 focus:border-black text-black placeholder:text-zinc-300'}`}/>
+                              ${isDark ? 'border-zinc-800 focus:border-green-500 text-white placeholder:text-zinc-500' : 'border-zinc-300 focus:border-black text-black placeholder:text-zinc-300'}`}/>
                         </div>
                       ))}
                       <div>
-                        <label className={`block text-[10px] font-bold uppercase tracking-[0.2em] mb-3 ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>¿En qué puedo ayudarte?</label>
+                        <label className={`block text-[11px] font-bold uppercase tracking-[0.2em] mb-3 ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>¿En qué puedo ayudarte?</label>
                         <textarea required rows={4} value={message} onChange={e=>setMessage(e.target.value)}
                           placeholder="Cuéntame tu proyecto, idea o lo que necesitas..."
                           className={`w-full px-0 py-2 bg-transparent border-b-2 outline-none transition-all duration-300 resize-none text-base
-                            ${isDark ? 'border-zinc-800 focus:border-green-500 text-white placeholder:text-zinc-700' : 'border-zinc-300 focus:border-black text-black placeholder:text-zinc-300'}`}/>
+                            ${isDark ? 'border-zinc-800 focus:border-green-500 text-white placeholder:text-zinc-500' : 'border-zinc-300 focus:border-black text-black placeholder:text-zinc-300'}`}/>
                       </div>
                     </div>
                     {formStep === 3 && <p className="text-xs text-red-400">Algo salió mal. Escríbeme a contrerasc479@gmail.com</p>}
@@ -692,7 +710,7 @@ function Home({ isDark }) {
                       {formStep===1 ? 'Enviando...' : 'Enviar mensaje'}
                       <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform"/>
                     </button>
-                    <p className={`text-center text-[10px] ${isDark ? 'text-zinc-700' : 'text-zinc-400'}`}>
+                    <p className="text-center text-[11px] text-zinc-500">
                       Respuesta garantizada en menos de 24 horas.
                     </p>
                   </form>
@@ -705,7 +723,7 @@ function Home({ isDark }) {
       </section>
 
       {/* ══ FOOTER ══ */}
-      <footer className={`border-t py-6 mb-16 md:mb-0 ${isDark ? 'border-zinc-900 bg-zinc-950 text-zinc-600' : 'border-zinc-200 bg-white text-zinc-400'}`}>
+      <footer className={`border-t py-6 mb-16 md:mb-0 ${isDark ? 'border-zinc-900 bg-zinc-950 text-zinc-400' : 'border-zinc-200 bg-white text-zinc-400'}`}>
         <div className="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="flex items-center gap-3">
             <span style={{fontFamily:'Syne,sans-serif'}} className="font-bold tracking-tighter text-lg">Erick C.</span>
@@ -741,7 +759,7 @@ function ServicePage({ isDark, accent, Icon, title, accentTitle, subtitle, featu
             <div className="w-14 h-14 rounded-2xl flex items-center justify-center" style={{background:`${accent}18`,color:accent}}>
               <Icon size={26} strokeWidth={1.5}/>
             </div>
-            <span className="text-[10px] font-bold uppercase tracking-[0.25em]" style={{color:accent}}>Servicio</span>
+            <span className="text-[11px] font-bold uppercase tracking-[0.25em]" style={{color:accent}}>Servicio</span>
           </div>
           <h1 style={{fontFamily:'Syne,sans-serif',color:c.txt}} className="text-4xl sm:text-6xl font-bold mb-4 leading-tight">
             {title}<br/><span style={{color:accent}}>{accentTitle}</span>
@@ -829,7 +847,7 @@ function ServiceSystems({ isDark }) {
     ctaDesc="Cuéntame tu flujo de trabajo y diseño la solución correcta."/>
 }
 
-function ServiceMarketing({ isDark }) {
+function ServiceAutomation({ isDark }) {
   return <ServicePage isDark={isDark} accent="#ec4899" Icon={Bot} title="IA &" accentTitle="Automatización"
     subtitle="Elimina tareas manuales con flujos de automatización inteligentes que trabajan 24/7."
     features={[
@@ -863,7 +881,8 @@ export default function App() {
         <Route path="/services/web"       element={<ServiceWeb       isDark={isDark}/>}/>
         <Route path="/services/ecommerce" element={<ServiceEcommerce isDark={isDark}/>}/>
         <Route path="/services/systems"   element={<ServiceSystems   isDark={isDark}/>}/>
-        <Route path="/services/marketing" element={<ServiceMarketing isDark={isDark}/>}/>
+        <Route path="/services/automation" element={<ServiceAutomation isDark={isDark}/>}/>
+        <Route path="/services/marketing" element={<Navigate to="/services/automation" replace/>}/>
         <Route path="*"                   element={<Home             isDark={isDark}/>}/>
       </Routes>
     </div>

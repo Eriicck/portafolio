@@ -79,11 +79,11 @@ body {
 .shine-text {
   background: linear-gradient(
     105deg,
-    rgba(255,255,255,0.55) 0%,
-    rgba(255,255,255,0.55) 40%,
+    rgba(255,255,255,0.78) 0%,
+    rgba(255,255,255,0.78) 40%,
     rgba(255,255,255,1) 50%,
-    rgba(255,255,255,0.55) 60%,
-    rgba(255,255,255,0.55) 100%
+    rgba(255,255,255,0.78) 60%,
+    rgba(255,255,255,0.78) 100%
   );
   background-size: 200% auto;
   -webkit-background-clip: text;
