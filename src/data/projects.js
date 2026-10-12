@@ -11,7 +11,32 @@ export const CATEGORIES = [
   { id: 'automation', label: 'IA & Automatización' },
 ]
 
+// El orden de la lista es el orden en que se muestran (los primeros, arriba).
 export const PROJECTS = [
+  {
+    id: 14, title: 'JM Distribuidora — Tienda Web', cat: 'ecommerce', status: 'E-commerce',
+    url: 'https://distribuidora-jm.com', img: '/proyectos/jm-web.jpg',
+    desc: 'Tienda mayorista conectada en vivo al sistema de gestión.',
+    details: 'Catálogo mayorista de más de 500 productos con precios y stock tomados en vivo del sistema JM. Carrito con compra mínima y descuento online configurables, pedido por WhatsApp a la vendedora de cada local, PDF del pedido, favoritos, panel de administración y app instalable (PWA). Tarjetas para compartir cada producto por WhatsApp y sitemap generado en vivo.',
+    stack: 'React + Vite + Tailwind. API propia del sistema JM y Edge Functions de Netlify para SEO y vistas previas.',
+    tags: ['Mayorista', 'WhatsApp', 'PWA', 'SEO'],
+  },
+  {
+    id: 15, title: 'Sistema JM — POS', cat: 'systems', status: 'SaaS',
+    url: 'https://sistema.distribuidora-jm.com', img: '/proyectos/jm-pos.jpg',
+    desc: 'Punto de venta y gestión para distribuidora con varios locales.',
+    details: 'Sistema interno en producción para una distribuidora mayorista con depósito y 4 locales: ventas, caja y cierres, stock por sucursal con presentaciones (bulto/docena), transferencias entre locales, cuentas corrientes, tesorería, proveedores y escáner de códigos con la cámara del celular. Permisos por rol.',
+    stack: 'React + Vite + Tailwind. Backend Node/Express con PostgreSQL en servidor propio (VPS).',
+    tags: ['POS', 'Stock', 'Multi-sucursal', 'PostgreSQL'],
+  },
+  {
+    id: 16, title: 'JM — Pedidos Web', cat: 'systems', status: 'Integración',
+    url: '', img: '/proyectos/jm-pedidos.jpg',
+    desc: 'Los pedidos de la tienda llegan directo a la caja de cada local.',
+    details: 'Integración entre la tienda web y el POS: cada pedido online entra a la caja del local que corresponde con sus productos y fotos. Desde ahí se carga en la venta con un clic, se imprime en ticket o A4, se comparte por WhatsApp con un link de "ver pedido con fotos", o se marca como vendido aparte o cancelado.',
+    stack: 'Mismo backend Node/Express + PostgreSQL que el POS. Impresión en ticket térmico de 58 mm y PDF.',
+    tags: ['Integración', 'WhatsApp', 'Caja', 'PDF'],
+  },
   {
     id: 1, title: 'GLAM Cosmetic', cat: 'ecommerce', status: 'E-commerce',
     url: 'https://glamcosmetic.netlify.app', img: shot('https://glamcosmetic.netlify.app'),
