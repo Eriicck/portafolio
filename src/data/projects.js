@@ -1,7 +1,6 @@
 // Proyectos del catálogo. Para sumar uno nuevo, agregá un objeto a la lista.
 // `cat` tiene que ser uno de los `id` de CATEGORIES.
-
-const shot = url => `https://s.wordpress.com/mshots/v1/${encodeURIComponent(url)}?w=800&h=500`
+// `img`: captura guardada en public/proyectos/ (ej. '/proyectos/glam.jpg').
 
 export const CATEGORIES = [
   { id: 'all',        label: 'Todos' },
@@ -39,7 +38,7 @@ export const PROJECTS = [
   },
   {
     id: 1, title: 'GLAM Cosmetic', cat: 'ecommerce', status: 'E-commerce',
-    url: 'https://glamcosmetic.netlify.app', img: shot('https://glamcosmetic.netlify.app'),
+    url: 'https://glamcosmetic.netlify.app', img: '/proyectos/glam.jpg',
     desc: 'Tienda online de maquillaje y skincare premium.',
     details: 'E-commerce completo con catálogo de productos, carrito que envía pedidos detallados a WhatsApp, panel admin con carga masiva por Excel, control de stock y precios en tiempo real.',
     stack: 'React + Tailwind + Firebase. Dashboard /admin con control total de productos, ofertas y stock.',
@@ -47,7 +46,7 @@ export const PROJECTS = [
   },
   {
     id: 2, title: 'Mayorista Online', cat: 'ecommerce', status: 'E-commerce',
-    url: 'https://mayoristaweb.netlify.app', img: shot('https://mayoristaweb.netlify.app'),
+    url: 'https://mayoristaweb.netlify.app', img: '/proyectos/mayorista.jpg',
     desc: 'Plataforma mayorista con catálogo y gestión de stock.',
     details: 'Sistema de ventas mayoristas con catálogo completo, carrito con envío a WhatsApp, panel de administración con carga masiva por Excel.',
     stack: 'React + Firebase. Admin dashboard con Excel bulk import y control multiusuario.',
@@ -55,23 +54,15 @@ export const PROJECTS = [
   },
   {
     id: 3, title: 'Street Cult', cat: 'ecommerce', status: 'E-commerce',
-    url: 'https://ropaaweb.netlify.app', img: shot('https://ropaaweb.netlify.app'),
+    url: 'https://ropaaweb.netlify.app', img: '/proyectos/street-cult.jpg',
     desc: 'Tienda de indumentaria urbana con carrito a WhatsApp.',
     details: 'Tienda online de ropa con catálogo visual por categorías (Hombres, Mujer, Niños, Accesorios), carrito inteligente que envía el pedido completo por WhatsApp.',
     stack: 'React + Tailwind + Firebase. Integración directa a WhatsApp Business.',
     tags: ['Indumentaria', 'WhatsApp', 'Carrito', 'Admin'],
   },
   {
-    id: 4, title: 'ContreBurger', cat: 'web', status: 'Landing',
-    url: 'https://contreburger.com', img: shot('https://contreburger.com'),
-    desc: 'Identidad digital para hamburguesería local.',
-    details: 'Sitio web completo: menú digital interactivo, ticker de novedades animado, integración WhatsApp para pedidos y delivery. Dominio .com propio.',
-    stack: 'React + Tailwind. Dominio .com propio. Optimizado para móvil y SEO local.',
-    tags: ['Gastronomía', 'Landing', 'WhatsApp', 'SEO'],
-  },
-  {
     id: 5, title: 'Rotisería Al Paso', cat: 'web', status: 'Landing',
-    url: 'https://rotiseriaweb.netlify.app', img: shot('https://rotiseriaweb.netlify.app'),
+    url: 'https://rotiseriaweb.netlify.app', img: '/proyectos/rotiseria.jpg',
     desc: 'Menú digital y presencia online para rotisería.',
     details: 'Web completa con menú digital del día, ticker animado de novedades, sistema de pedidos por WhatsApp y diseño responsive mobile-first.',
     stack: 'React + Tailwind. Mobile-first design. Actualización de menú desde panel admin.',
@@ -79,7 +70,7 @@ export const PROJECTS = [
   },
   {
     id: 6, title: 'TuHandyman Miami', cat: 'web', status: 'Landing',
-    url: 'https://tuhandymanmiami.netlify.app', img: shot('https://tuhandymanmiami.netlify.app'),
+    url: 'https://tuhandymanmiami.netlify.app', img: '/proyectos/handyman.jpg',
     desc: 'Servicios de handyman para el mercado USA.',
     details: 'Landing page de alto impacto para servicios de mantenimiento en Miami. Portafolio de proyectos con filtros por categoría, galería visual y formulario de cotización.',
     stack: 'React + Tailwind. Mercado USA — contacto integrado por email y WhatsApp.',
@@ -87,7 +78,7 @@ export const PROJECTS = [
   },
   {
     id: 7, title: "L'Esthétique", cat: 'web', status: 'Landing',
-    url: 'https://cejasweb.netlify.app', img: shot('https://cejasweb.netlify.app'),
+    url: 'https://cejasweb.netlify.app', img: '/proyectos/lesthetique.jpg',
     desc: 'Web premium para salón de belleza y estética.',
     details: 'Sitio elegante para salón de uñas, pedicuría y diseño de miradas. Blog & tips, agenda de turnos integrada y diseño premium.',
     stack: 'React + Tailwind. Ticker de tips animado, blog integrado y botón de reserva directo.',
@@ -103,7 +94,7 @@ export const PROJECTS = [
   },
   {
     id: 9, title: 'Óptica — Gestión & Catálogo', cat: 'systems', status: 'Demo',
-    url: 'https://opticademo.netlify.app', img: shot('https://opticademo.netlify.app'),
+    url: 'https://opticademo.netlify.app', img: '/proyectos/optica.jpg',
     desc: 'Sistema completo para ópticas con panel admin.',
     details: 'Gestión para ópticas: catálogo de lentes por categoría (Sol, Receta, Moda, Deporte), filtros, stock y panel administrador.',
     stack: 'React + Tailwind + Firebase. Dashboard de administración incluido.',
@@ -127,7 +118,7 @@ export const PROJECTS = [
   },
   {
     id: 12, title: 'GLAM Admin Panel', cat: 'systems', status: 'Admin',
-    url: 'https://glamcosmetic.netlify.app/admin/login', img: shot('https://glamcosmetic.netlify.app/admin/login'),
+    url: 'https://glamcosmetic.netlify.app/admin/login', img: '/proyectos/glam-admin.jpg',
     desc: 'Panel de administración para tienda de cosméticos.',
     details: 'Sistema de login con panel admin completo para gestión de productos, stock, pedidos y ofertas. Acceso seguro con Firebase Auth.',
     stack: 'React + Firebase Auth + Firestore. Carga masiva por Excel, control total de inventario.',
@@ -135,7 +126,7 @@ export const PROJECTS = [
   },
   {
     id: 13, title: 'Comercial David — CRM', cat: 'systems', status: 'SaaS',
-    url: 'https://comercialdavid.netlify.app/login', img: shot('https://comercialdavid.netlify.app/login'),
+    url: 'https://comercialdavid.netlify.app/login', img: '/proyectos/comercial-david.jpg',
     desc: 'Sistema de gestión comercial con autenticación.',
     details: 'Plataforma CRM con login seguro, gestión de clientes, pedidos y reportes. Diseñada para equipos comerciales.',
     stack: 'React + Firebase Auth. Panel multiusuario con roles y permisos.',
