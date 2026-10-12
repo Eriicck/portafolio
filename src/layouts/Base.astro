@@ -3,6 +3,8 @@ import '../styles/global.css'
 import Navbar from '../components/Navbar.astro'
 import Footer from '../components/Footer.astro'
 import { SITE } from '../data/site.js'
+import syneUrl from '@fontsource-variable/syne/files/syne-latin-wght-normal.woff2?url'
+import dmSansUrl from '@fontsource-variable/dm-sans/files/dm-sans-latin-wght-normal.woff2?url'
 
 interface Props { title?: string; description?: string }
 const { title = SITE.title, description = SITE.description } = Astro.props
@@ -36,9 +38,9 @@ const ogImage = new URL(SITE.ogImage, Astro.site)
   <meta name="twitter:description" content={SITE.ogDescription} />
   <meta name="twitter:image" content={ogImage} />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Lato:ital,wght@1,300;1,400;1,700&display=swap" rel="stylesheet" />
+  <!-- Fuentes del título y del texto: se piden apenas empieza a cargar la página -->
+  <link rel="preload" href={syneUrl} as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href={dmSansUrl} as="font" type="font/woff2" crossorigin />
 
   <slot name="head" />
 

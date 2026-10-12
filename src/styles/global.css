@@ -1,11 +1,15 @@
+/* Fuentes servidas desde el propio sitio (sin Google Fonts) */
+@import "@fontsource-variable/syne";
+@import "@fontsource-variable/dm-sans";
+@import "@fontsource/lato/latin-400-italic.css";
 @import "tailwindcss";
 
 /* Modo oscuro por clase: <html class="dark">. Lo pone el script del <head> (Base.astro). */
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-display: 'Syne', sans-serif;
-  --font-sans: 'DM Sans', sans-serif;
+  --font-display: 'Syne Variable', sans-serif;
+  --font-sans: 'DM Sans Variable', sans-serif;
   --font-serif: 'Lato', sans-serif;
   --color-accent: #22c55e;
 }
