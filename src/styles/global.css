@@ -1,0 +1,128 @@
+@import "tailwindcss";
+
+/* Modo oscuro por clase: <html class="dark">. Lo pone el script del <head> (Base.astro). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-display: 'Syne', sans-serif;
+  --font-sans: 'DM Sans', sans-serif;
+  --font-serif: 'Lato', sans-serif;
+  --color-accent: #22c55e;
+}
+
+html { scroll-behavior: smooth; }
+html:not(.dark) { color-scheme: light; }
+html.dark { color-scheme: dark; }
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background: #f8f8f8;
+  color: #09090b;
+  overflow-x: hidden;
+}
+.dark body { background: #09090b; color: #fff; }
+
+::selection { background: rgba(34,197,94,0.3); color: #fff; }
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #09090b; }
+::-webkit-scrollbar-thumb { background: #27272a; border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #22c55e; }
+
+/* Las secciones con id quedan por debajo de la barra fija al navegar con anclas */
+section[id], header[id] { scroll-margin-top: 4rem; }
+
+/* ── Aparición al hacer scroll ([data-reveal]) ──
+   Solo se oculta si hay JavaScript (clase .js en <html>), así sin JS el contenido se ve igual. */
+.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(2rem);
+  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.js [data-reveal].is-visible { opacity: 1; transform: none; }
+
+/* Entrada del hero */
+@keyframes revealUp {
+  from { opacity: 0; transform: translateY(1.5rem); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero-in { animation: revealUp 0.7s ease-out both; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .js [data-reveal] { opacity: 1; transform: none; transition: none; }
+  .hero-in, .ticker-wrap, .shine-text { animation: none; }
+}
+
+/* Recorte de la foto de perfil */
+.clip-cyborg { clip-path: polygon(15% 0, 100% 0, 100% 85%, 85% 100%, 0 100%, 0 15%); }
+.human-tech-filter { filter: contrast(110%) saturate(120%); }
+
+/* Cinta de tecnologías */
+@keyframes ticker {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.ticker-wrap { animation: ticker 32s linear infinite; }
+.ticker-wrap:hover { animation-play-state: paused; }
+.ticker-item { transition: transform 0.25s ease; }
+.ticker-item:hover { transform: scale(1.2); }
+.dark .logo-invert { filter: invert(1); }
+
+/* Tarjetas que se dan vuelta */
+.flip-card { perspective: 1500px; }
+.flip-inner {
+  position: relative; width: 100%; height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.7s cubic-bezier(0.4,0,0.2,1);
+}
+@media (hover: hover) {
+  .flip-card:hover .flip-inner,
+  .flip-card:focus-visible .flip-inner { transform: rotateY(180deg); }
+}
+.flip-front, .flip-back {
+  position: absolute; inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 1rem; overflow: hidden;
+}
+.flip-back { transform: rotateY(180deg); }
+
+/* Fondo de la sección de contacto */
+.parallax-contact {
+  background-image: url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070&auto=format&fit=crop');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+@media (max-width: 768px) {
+  .parallax-contact { background-attachment: scroll; }
+}
+
+/* Brillo que recorre el texto del hero */
+@keyframes shineSweep {
+  0%   { background-position: -200% center; }
+  30%  { background-position: 200% center; }
+  100% { background-position: 200% center; }
+}
+.shine-text {
+  background: linear-gradient(
+    105deg,
+    rgba(255,255,255,0.78) 0%,
+    rgba(255,255,255,0.78) 40%,
+    rgba(255,255,255,1) 50%,
+    rgba(255,255,255,0.78) 60%,
+    rgba(255,255,255,0.78) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shineSweep 6s linear infinite;
+}
+
+/* Barra superior: se esconde al bajar y aparece al subir (lo maneja Navbar.astro) */
+.site-header { transition: transform 0.5s, background-color 0.5s, border-color 0.5s; }
+.site-header.is-hidden { transform: translateY(-100%); }

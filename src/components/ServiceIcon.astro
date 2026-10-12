@@ -1,0 +1,9 @@
+---
+import { PanelsTopLeft, ShoppingCart, LayoutDashboard, Bot } from '@lucide/astro'
+
+interface Props { name: string; size?: number; class?: string }
+const { name, size = 24, class: className } = Astro.props
+const ICONS = { web: PanelsTopLeft, ecommerce: ShoppingCart, systems: LayoutDashboard, automation: Bot }
+const Icon = ICONS[name as keyof typeof ICONS] ?? Bot
+---
+<Icon size={size} stroke-width={1.5} class={className} />

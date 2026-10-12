@@ -1,0 +1,66 @@
+---
+import { SITE } from '../data/site.js'
+import { PROJECTS } from '../data/projects.js'
+
+const ROLES = ['Fullstack Developer', 'Analista de Sistemas', 'E-commerce', 'Marketing Digital', 'Freelancer']
+const card = 'absolute z-20 border shadow-xl backdrop-blur-md bg-white/90 border-zinc-200 dark:bg-zinc-900/90 dark:border-zinc-700'
+---
+<section id="perfil">
+  <div data-reveal class="py-28 border-t bg-white border-zinc-100 dark:bg-zinc-950 dark:border-zinc-900">
+    <div class="container mx-auto px-6">
+      <div class="grid md:grid-cols-2 gap-16 lg:gap-24 items-center">
+        <div class="order-2 md:order-1">
+          <ul class="flex flex-wrap gap-2 mb-6">
+            {ROLES.map((t) => (
+              <li class="text-[11px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-zinc-200 text-zinc-500 bg-zinc-50 dark:border-zinc-700 dark:text-zinc-400 dark:bg-zinc-900">{t}</li>
+            ))}
+          </ul>
+          <h2 class="font-display text-4xl md:text-6xl font-bold mb-8 leading-tight text-black dark:text-white">{SITE.name}</h2>
+          <div class="text-lg leading-relaxed space-y-5 font-light text-zinc-600 dark:text-zinc-400">
+            <p>Desarrollador de software y automatizaciones radicado en <span class="font-medium text-black dark:text-white">Buenos Aires</span>. Ayudo a escalar negocios mediante la tecnología.</p>
+            <p>Me especializo en <span class="text-accent font-bold">creación de SaaS, E-commerce e integraciones con n8n</span>: construyendo ecosistemas que optimizan logística, ventas e IA.</p>
+          </div>
+        </div>
+
+        <div class="order-1 md:order-2 relative flex justify-center">
+          <div class="relative w-full max-w-sm aspect-[4/5] clip-cyborg group shadow-2xl">
+            <div class="absolute inset-0 z-10 mix-blend-overlay transition-opacity duration-700 bg-gradient-to-tr from-green-100/30 to-blue-100/30 opacity-40 dark:from-green-900/40 dark:to-blue-900/40 dark:opacity-60 dark:group-hover:opacity-40"></div>
+            <img src={SITE.photo} alt={SITE.name} width="384" height="480" class="w-full h-full object-cover human-tech-filter transition-transform duration-1000 group-hover:scale-105" />
+            <div class="absolute inset-0 border-2 opacity-30 pointer-events-none z-20 clip-cyborg border-black dark:border-white dark:shadow-[inset_0_0_80px_rgba(34,197,94,0.3)]"></div>
+            <div class="absolute top-[28%] right-[12%] w-2 h-2 bg-red-500 rounded-full animate-ping z-30 shadow-[0_0_15px_red]"></div>
+            <div class="absolute bottom-[22%] left-[10%] w-20 h-1 bg-green-500/80 blur-[2px] z-30 shadow-[0_0_20px_#4ade80]"></div>
+          </div>
+          <div class="absolute -z-10 top-8 -right-8 w-full h-full border-2 border-dashed rounded-[3rem] opacity-10 border-zinc-400 dark:border-green-500"></div>
+
+          <div class={`${card} -bottom-6 -left-6 px-5 py-4 rounded-2xl`} data-parallax="-0.06">
+            <p class="text-[11px] font-bold uppercase tracking-[0.2em] mb-1 text-zinc-500 dark:text-zinc-400">Stack principal</p>
+            <p class="font-display text-sm font-bold text-black dark:text-white">React · Astro · Firebase · n8n</p>
+            <div class="flex items-center gap-1.5 mt-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+              <span class="text-[11px] font-medium text-zinc-500 dark:text-zinc-400">Disponible para proyectos</span>
+            </div>
+          </div>
+          <div class={`${card} -top-4 -right-4 px-4 py-3 rounded-xl`} data-parallax="0.04">
+            <p class="text-[11px] font-bold uppercase tracking-widest mb-0.5 text-zinc-500 dark:text-zinc-400">Proyectos</p>
+            <p class="font-display text-xl font-bold text-black dark:text-white">{PROJECTS.length}+</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Las tarjetas flotantes se desplazan un poco al hacer scroll
+  const items = [...document.querySelectorAll<HTMLElement>('[data-parallax]')]
+  if (items.length && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    let ticking = false
+    const update = () => {
+      const y = window.scrollY
+      for (const el of items) el.style.transform = `translateY(${y * Number(el.dataset.parallax)}px)`
+      ticking = false
+    }
+    window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update) } }, { passive: true })
+    update()
+  }
+</script>

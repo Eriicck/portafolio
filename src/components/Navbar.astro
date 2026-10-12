@@ -1,0 +1,113 @@
+---
+import { ChevronDown, Sun, Moon, Briefcase, User, Layers } from '@lucide/astro'
+import { SERVICES } from '../data/services.js'
+import { SITE } from '../data/site.js'
+---
+<!-- ESCRITORIO -->
+<header
+  id="desktop-header"
+  class="site-header fixed top-0 inset-x-0 z-50 hidden md:flex items-center justify-between px-8 h-16 border-b border-transparent
+         data-scrolled:bg-white/95 data-scrolled:dark:bg-zinc-950/95 data-scrolled:backdrop-blur-lg data-scrolled:border-black/10 data-scrolled:dark:border-white/5"
+>
+  <a href="/" class="font-display font-bold text-xl tracking-tight text-zinc-950 dark:text-white hover:text-accent transition-colors">{SITE.short}</a>
+  <nav class="flex items-center gap-8" aria-label="Principal">
+    <div class="relative" data-dropdown>
+      <button type="button" aria-expanded="false" aria-controls="services-menu" data-dropdown-button
+        class="flex items-center gap-1 text-sm font-medium text-zinc-950 dark:text-white hover:text-accent aria-expanded:text-accent transition-colors group">
+        Servicios <ChevronDown size={13} class="transition-transform group-aria-expanded:rotate-180" />
+      </button>
+      <div id="services-menu" hidden data-dropdown-panel
+        class="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-64 rounded-2xl border border-black/10 dark:border-white/5 bg-white dark:bg-zinc-900 shadow-2xl p-2">
+        {SERVICES.map((s) => (
+          <a href={`/services/${s.slug}`} class="flex items-start gap-3 p-3 rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-800/50 transition-colors">
+            <span class="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0" style={`background:${s.accent}`}></span>
+            <span>
+              <span class="block text-xs font-bold text-zinc-950 dark:text-white">{s.name}</span>
+              <span class="block text-[11px] text-zinc-500 dark:text-zinc-400">{s.menuSub}</span>
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+    <a href="/#perfil" class="text-sm font-medium text-zinc-950 dark:text-white hover:text-accent transition-colors">Perfil</a>
+    <a href="/#proyectos" class="text-sm font-medium text-zinc-950 dark:text-white hover:text-accent transition-colors">Proyectos</a>
+    <button type="button" data-theme-toggle aria-label="Cambiar tema"
+      class="w-9 h-9 rounded-full flex items-center justify-center transition-transform hover:scale-110 bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-yellow-400">
+      <Sun size={15} class="hidden dark:block" />
+      <Moon size={15} class="dark:hidden" />
+    </button>
+  </nav>
+</header>
+
+<!-- CELULAR: arriba -->
+<header id="mobile-header"
+  class="site-header fixed top-0 inset-x-0 z-50 flex md:hidden items-center px-5 h-14 border-b border-black/10 dark:border-white/5 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-lg">
+  <a href="/" class="font-display font-bold text-base text-zinc-950 dark:text-white">{SITE.short}</a>
+</header>
+
+<!-- CELULAR: barra inferior -->
+<nav aria-label="Principal (celular)"
+  class="fixed bottom-0 inset-x-0 z-50 flex md:hidden items-center justify-around h-16 border-t border-black/10 dark:border-white/5 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-lg text-zinc-500 dark:text-zinc-400">
+  <button type="button" data-mobile-services aria-expanded="false" aria-controls="mobile-services" class="flex flex-col items-center gap-1">
+    <Briefcase size={20} stroke-width={1.5} /><span class="text-[11px] font-medium">Servicios</span>
+  </button>
+  <a href="/#perfil" class="flex flex-col items-center gap-1">
+    <User size={20} stroke-width={1.5} /><span class="text-[11px] font-medium">Perfil</span>
+  </a>
+  <a href="/#proyectos" class="flex flex-col items-center gap-1">
+    <Layers size={20} stroke-width={1.5} /><span class="text-[11px] font-medium">Catálogo</span>
+  </a>
+  <button type="button" data-theme-toggle class="flex flex-col items-center gap-1 dark:text-yellow-400">
+    <Sun size={20} stroke-width={1.5} class="hidden dark:block" />
+    <Moon size={20} stroke-width={1.5} class="dark:hidden" />
+    <span class="text-[11px] font-medium"><span class="hidden dark:inline">Claro</span><span class="dark:hidden">Oscuro</span></span>
+  </button>
+</nav>
+
+<!-- CELULAR: menú de servicios -->
+<div id="mobile-services" hidden class="md:hidden">
+  <div class="fixed inset-0 z-40 backdrop-blur-sm bg-black/60" data-mobile-services-close></div>
+  <div class="fixed bottom-16 inset-x-4 z-50 rounded-2xl border border-black/10 dark:border-white/5 bg-white dark:bg-zinc-900 overflow-hidden shadow-2xl">
+    {SERVICES.map((s) => (
+      <a href={`/services/${s.slug}`} class="flex items-start gap-4 px-5 py-4 border-b last:border-b-0 border-black/10 dark:border-white/5">
+        <span class="w-2 h-2 rounded-full mt-1.5 shrink-0" style={`background:${s.accent}`}></span>
+        <span>
+          <span class="block text-sm font-bold text-zinc-950 dark:text-white">{s.name}</span>
+          <span class="block text-xs mt-0.5 text-zinc-500 dark:text-zinc-400">{s.menuSub}</span>
+        </span>
+      </a>
+    ))}
+  </div>
+</div>
+
+<script>
+  // Barras superiores: fondo al hacer scroll, se esconden al bajar y aparecen al subir
+  const headers = document.querySelectorAll<HTMLElement>('.site-header')
+  const desktop = document.getElementById('desktop-header')!
+  let lastY = 0
+  const onScroll = () => {
+    const y = window.scrollY
+    const show = y < lastY || y < 80
+    headers.forEach((h) => h.classList.toggle('is-hidden', !show))
+    desktop.toggleAttribute('data-scrolled', y > 20)
+    lastY = y
+  }
+  window.addEventListener('scroll', onScroll, { passive: true })
+  onScroll()
+
+  // Menú desplegable de Servicios (escritorio)
+  const dd = document.querySelector<HTMLElement>('[data-dropdown]')!
+  const ddBtn = dd.querySelector<HTMLButtonElement>('[data-dropdown-button]')!
+  const ddPanel = dd.querySelector<HTMLElement>('[data-dropdown-panel]')!
+  const setDropdown = (open: boolean) => { ddPanel.hidden = !open; ddBtn.setAttribute('aria-expanded', String(open)) }
+  ddBtn.addEventListener('click', () => setDropdown(ddPanel.hidden))
+  document.addEventListener('mousedown', (e) => { if (!dd.contains(e.target as Node)) setDropdown(false) })
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { setDropdown(false); setMobile(false) } })
+
+  // Menú de servicios (celular)
+  const mBtn = document.querySelector<HTMLButtonElement>('[data-mobile-services]')!
+  const mPanel = document.getElementById('mobile-services')!
+  const setMobile = (open: boolean) => { mPanel.hidden = !open; mBtn.setAttribute('aria-expanded', String(open)) }
+  mBtn.addEventListener('click', () => setMobile(mPanel.hidden))
+  mPanel.querySelector('[data-mobile-services-close]')!.addEventListener('click', () => setMobile(false))
+</script>

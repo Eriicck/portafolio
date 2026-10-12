@@ -1,0 +1,119 @@
+// Proyectos del catálogo. Para sumar uno nuevo, agregá un objeto a la lista.
+// `cat` tiene que ser uno de los `id` de CATEGORIES.
+
+const shot = url => `https://s.wordpress.com/mshots/v1/${encodeURIComponent(url)}?w=800&h=500`
+
+export const CATEGORIES = [
+  { id: 'all',        label: 'Todos' },
+  { id: 'web',        label: 'Web & Landing' },
+  { id: 'ecommerce',  label: 'E-commerce' },
+  { id: 'systems',    label: 'Sistemas & SaaS' },
+  { id: 'automation', label: 'IA & Automatización' },
+]
+
+export const PROJECTS = [
+  {
+    id: 1, title: 'GLAM Cosmetic', cat: 'ecommerce', status: 'E-commerce',
+    url: 'https://glamcosmetic.netlify.app', img: shot('https://glamcosmetic.netlify.app'),
+    desc: 'Tienda online de maquillaje y skincare premium.',
+    details: 'E-commerce completo con catálogo de productos, carrito que envía pedidos detallados a WhatsApp, panel admin con carga masiva por Excel, control de stock y precios en tiempo real.',
+    stack: 'React + Tailwind + Firebase. Dashboard /admin con control total de productos, ofertas y stock.',
+    tags: ['E-commerce', 'WhatsApp', 'Admin', 'Excel'],
+  },
+  {
+    id: 2, title: 'Mayorista Online', cat: 'ecommerce', status: 'E-commerce',
+    url: 'https://mayoristaweb.netlify.app', img: shot('https://mayoristaweb.netlify.app'),
+    desc: 'Plataforma mayorista con catálogo y gestión de stock.',
+    details: 'Sistema de ventas mayoristas con catálogo completo, carrito con envío a WhatsApp, panel de administración con carga masiva por Excel.',
+    stack: 'React + Firebase. Admin dashboard con Excel bulk import y control multiusuario.',
+    tags: ['Mayorista', 'WhatsApp', 'Dashboard', 'Excel'],
+  },
+  {
+    id: 3, title: 'Street Cult', cat: 'ecommerce', status: 'E-commerce',
+    url: 'https://ropaaweb.netlify.app', img: shot('https://ropaaweb.netlify.app'),
+    desc: 'Tienda de indumentaria urbana con carrito a WhatsApp.',
+    details: 'Tienda online de ropa con catálogo visual por categorías (Hombres, Mujer, Niños, Accesorios), carrito inteligente que envía el pedido completo por WhatsApp.',
+    stack: 'React + Tailwind + Firebase. Integración directa a WhatsApp Business.',
+    tags: ['Indumentaria', 'WhatsApp', 'Carrito', 'Admin'],
+  },
+  {
+    id: 4, title: 'ContreBurger', cat: 'web', status: 'Landing',
+    url: 'https://contreburger.com', img: shot('https://contreburger.com'),
+    desc: 'Identidad digital para hamburguesería local.',
+    details: 'Sitio web completo: menú digital interactivo, ticker de novedades animado, integración WhatsApp para pedidos y delivery. Dominio .com propio.',
+    stack: 'React + Tailwind. Dominio .com propio. Optimizado para móvil y SEO local.',
+    tags: ['Gastronomía', 'Landing', 'WhatsApp', 'SEO'],
+  },
+  {
+    id: 5, title: 'Rotisería Al Paso', cat: 'web', status: 'Landing',
+    url: 'https://rotiseriaweb.netlify.app', img: shot('https://rotiseriaweb.netlify.app'),
+    desc: 'Menú digital y presencia online para rotisería.',
+    details: 'Web completa con menú digital del día, ticker animado de novedades, sistema de pedidos por WhatsApp y diseño responsive mobile-first.',
+    stack: 'React + Tailwind. Mobile-first design. Actualización de menú desde panel admin.',
+    tags: ['Gastronomía', 'Menú Digital', 'Mobile'],
+  },
+  {
+    id: 6, title: 'TuHandyman Miami', cat: 'web', status: 'Landing',
+    url: 'https://tuhandymanmiami.netlify.app', img: shot('https://tuhandymanmiami.netlify.app'),
+    desc: 'Servicios de handyman para el mercado USA.',
+    details: 'Landing page de alto impacto para servicios de mantenimiento en Miami. Portafolio de proyectos con filtros por categoría, galería visual y formulario de cotización.',
+    stack: 'React + Tailwind. Mercado USA — contacto integrado por email y WhatsApp.',
+    tags: ['USA', 'Landing', 'Servicios'],
+  },
+  {
+    id: 7, title: "L'Esthétique", cat: 'web', status: 'Landing',
+    url: 'https://cejasweb.netlify.app', img: shot('https://cejasweb.netlify.app'),
+    desc: 'Web premium para salón de belleza y estética.',
+    details: 'Sitio elegante para salón de uñas, pedicuría y diseño de miradas. Blog & tips, agenda de turnos integrada y diseño premium.',
+    stack: 'React + Tailwind. Ticker de tips animado, blog integrado y botón de reserva directo.',
+    tags: ['Belleza', 'Landing', 'Turnos', 'Blog'],
+  },
+  {
+    id: 8, title: 'COT — Turnos Médicos', cat: 'systems', status: 'SaaS',
+    url: 'https://consultorios-c770d.web.app', img: '/proyectos/cot.jpg',
+    desc: 'Turnos online + panel interno para consultorio médico.',
+    details: 'Web de turnos en 3 pasos (profesional y cobertura, día y horario, datos) con link para cancelar o cambiar el turno. Panel interno tipo CRM: agenda del día, calendario semana/mes, recordatorios por WhatsApp, ficha del paciente con historia clínica y descargas a Excel/PDF. App instalable (PWA) y modo oscuro.',
+    stack: 'Astro + React + TypeScript + Firebase. Reglas de seguridad por rol con pruebas automáticas y publicación continua con GitHub Actions.',
+    tags: ['Salud', 'Turnos', 'CRM', 'PWA'],
+  },
+  {
+    id: 9, title: 'Óptica — Gestión & Catálogo', cat: 'systems', status: 'Demo',
+    url: 'https://opticademo.netlify.app', img: shot('https://opticademo.netlify.app'),
+    desc: 'Sistema completo para ópticas con panel admin.',
+    details: 'Gestión para ópticas: catálogo de lentes por categoría (Sol, Receta, Moda, Deporte), filtros, stock y panel administrador.',
+    stack: 'React + Tailwind + Firebase. Dashboard de administración incluido.',
+    tags: ['Óptica', 'Gestión', 'Admin', 'Stock'],
+  },
+  {
+    id: 10, title: 'Automatización con n8n', cat: 'automation', status: 'Eficiencia',
+    url: '', img: 'https://substackcdn.com/image/fetch/$s_!GuPI!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fd02ec635-f963-4cb9-89b6-4bc080bd9ab1_3698x2778.webp',
+    desc: 'Flujos que conectan tu negocio y eliminan tareas manuales.',
+    details: 'Diseño e implementación de flujos automatizados: Lead → CRM → WhatsApp → Email → seguimiento automático.',
+    stack: 'n8n + Webhooks. Reducción de tareas manuales operativas en +70%.',
+    tags: ['n8n', 'Webhooks', 'CRM', 'WhatsApp'],
+  },
+  {
+    id: 11, title: 'Agentes IA Autónomos', cat: 'automation', status: 'Innovación',
+    url: '', img: 'https://n8niostorageaccount.blob.core.windows.net/n8nio-strapi-blobs-prod/assets/wf_itops_can_9321eac0eb.svg',
+    desc: 'Asistente inteligente de ventas y soporte 24/7.',
+    details: 'Agentes IA entrenados con datos del negocio para atención al cliente, soporte técnico y ventas automáticas sin intervención humana.',
+    stack: 'GPT-4o + n8n + RAG. Entrenado con datos propios del cliente.',
+    tags: ['LLM', 'RAG', 'GPT-4o', 'n8n'],
+  },
+  {
+    id: 12, title: 'GLAM Admin Panel', cat: 'systems', status: 'Admin',
+    url: 'https://glamcosmetic.netlify.app/admin/login', img: shot('https://glamcosmetic.netlify.app/admin/login'),
+    desc: 'Panel de administración para tienda de cosméticos.',
+    details: 'Sistema de login con panel admin completo para gestión de productos, stock, pedidos y ofertas. Acceso seguro con Firebase Auth.',
+    stack: 'React + Firebase Auth + Firestore. Carga masiva por Excel, control total de inventario.',
+    tags: ['Admin', 'Firebase', 'Auth', 'E-commerce'],
+  },
+  {
+    id: 13, title: 'Comercial David — CRM', cat: 'systems', status: 'SaaS',
+    url: 'https://comercialdavid.netlify.app/login', img: shot('https://comercialdavid.netlify.app/login'),
+    desc: 'Sistema de gestión comercial con autenticación.',
+    details: 'Plataforma CRM con login seguro, gestión de clientes, pedidos y reportes. Diseñada para equipos comerciales.',
+    stack: 'React + Firebase Auth. Panel multiusuario con roles y permisos.',
+    tags: ['CRM', 'Auth', 'SaaS', 'Gestión'],
+  },
+]
