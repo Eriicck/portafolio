@@ -2,18 +2,22 @@
 import { ChevronDown, Sun, Moon, Briefcase, User, Layers } from '@lucide/astro'
 import { SERVICES } from '../data/services.js'
 import { SITE } from '../data/site.js'
+
+// En el inicio la barra arranca transparente sobre el hero negro: ahí el texto va blanco también en modo claro.
+const startsOverHero = Astro.url.pathname === '/'
 ---
 <!-- ESCRITORIO -->
 <header
   id="desktop-header"
-  class="site-header fixed top-0 inset-x-0 z-50 hidden md:flex items-center justify-between px-8 h-16 border-b border-transparent
+  data-over-hero={startsOverHero ? "" : undefined}
+  class="group/header site-header fixed top-0 inset-x-0 z-50 hidden md:flex items-center justify-between px-8 h-16 border-b border-transparent
          data-scrolled:bg-white/95 data-scrolled:dark:bg-zinc-950/95 data-scrolled:backdrop-blur-lg data-scrolled:border-black/10 data-scrolled:dark:border-white/5"
 >
-  <a href="/" class="font-display font-bold text-xl tracking-tight text-zinc-950 dark:text-white hover:text-accent transition-colors">{SITE.short}</a>
+  <a href="/" class="font-display font-bold text-xl tracking-tight text-zinc-950 dark:text-white hover:text-accent group-data-over-hero/header:text-white group-data-over-hero/header:hover:text-accent transition-colors">{SITE.short}</a>
   <nav class="flex items-center gap-8" aria-label="Principal">
     <div class="relative" data-dropdown>
       <button type="button" aria-expanded="false" aria-controls="services-menu" data-dropdown-button
-        class="flex items-center gap-1 text-sm font-medium text-zinc-950 dark:text-white hover:text-accent aria-expanded:text-accent transition-colors group">
+        class="flex items-center gap-1 text-sm font-medium text-zinc-950 dark:text-white hover:text-accent group-data-over-hero/header:text-white group-data-over-hero/header:hover:text-accent aria-expanded:text-accent group-data-over-hero/header:aria-expanded:text-accent transition-colors group">
         Servicios <ChevronDown size={13} class="transition-transform group-aria-expanded:rotate-180" />
       </button>
       <div id="services-menu" hidden data-dropdown-panel
@@ -29,8 +33,8 @@ import { SITE } from '../data/site.js'
         ))}
       </div>
     </div>
-    <a href="/#perfil" class="text-sm font-medium text-zinc-950 dark:text-white hover:text-accent transition-colors">Perfil</a>
-    <a href="/#proyectos" class="text-sm font-medium text-zinc-950 dark:text-white hover:text-accent transition-colors">Proyectos</a>
+    <a href="/#perfil" class="text-sm font-medium text-zinc-950 dark:text-white hover:text-accent group-data-over-hero/header:text-white group-data-over-hero/header:hover:text-accent transition-colors">Perfil</a>
+    <a href="/#proyectos" class="text-sm font-medium text-zinc-950 dark:text-white hover:text-accent group-data-over-hero/header:text-white group-data-over-hero/header:hover:text-accent transition-colors">Proyectos</a>
     <button type="button" data-theme-toggle aria-label="Cambiar tema"
       class="w-9 h-9 rounded-full flex items-center justify-center transition-transform hover:scale-110 bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-yellow-400">
       <Sun size={15} class="hidden dark:block" />
@@ -84,12 +88,14 @@ import { SITE } from '../data/site.js'
   // Barras superiores: fondo al hacer scroll, se esconden al bajar y aparecen al subir
   const headers = document.querySelectorAll<HTMLElement>('.site-header')
   const desktop = document.getElementById('desktop-header')!
+  const hero = document.getElementById('hero')
   let lastY = 0
   const onScroll = () => {
     const y = window.scrollY
     const show = y < lastY || y < 80
     headers.forEach((h) => h.classList.toggle('is-hidden', !show))
     desktop.toggleAttribute('data-scrolled', y > 20)
+    desktop.toggleAttribute('data-over-hero', !!hero && y <= 20)
     lastY = y
   }
   window.addEventListener('scroll', onScroll, { passive: true })
